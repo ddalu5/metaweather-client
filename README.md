@@ -11,4 +11,4 @@ A simple Python client to get tomorrow weather using the metaweather API : https
 
 Just by typing:
 
-`python main.py `
+`python main.py city name`
