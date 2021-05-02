@@ -17,3 +17,10 @@ class MetaWeatherUnreachableError(Exception):
     def __init__(self):
         message = "The metaweather API is unreachable!"
         super().__init__(message)
+
+
+class CityIdNotFound(Exception):
+
+    def __init__(self, city_id):
+        message = "The API returned a 404 error for the city id {id}".format(id=city_id)
+        super().__init__(message)

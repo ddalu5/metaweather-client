@@ -1,6 +1,7 @@
 import requests
 
 from .exceptions import CityNameError
+from .exceptions import CityIdNotFound
 from .exceptions import UnknownCityNameError
 from .exceptions import MetaWeatherUnreachableError
 
@@ -53,3 +54,21 @@ class MetaWeather:
                 raise UnknownCityNameError(self.__city_name)
         else:
             raise MetaWeatherUnreachableError()
+
+    def get_city_weather_by_date(self, city_id: int, selected_date: str):
+        """
+        get the weather for a selected date formed(yyy/mm/dd) for a city (city id from the API)
+
+        :param city_id:
+        :param selected_date:
+        :return:
+        """
+        query_url = self.construct_url(city_id) + selected_date
+        response = requests.get(query_url)
+        if response.ok:
+            return response.json()
+        else:
+            if response.status_code == 404:
+                raise CityIdNotFound(city_id)
+            else:
+                raise MetaWeatherUnreachableError()

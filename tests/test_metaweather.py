@@ -1,7 +1,10 @@
+from datetime import date
 from unittest import TestCase
 
 from lib.metaweather import MetaWeather
+
 from lib.exceptions import CityNameError
+from lib.exceptions import CityIdNotFound
 
 
 class TestMetaWeather(TestCase):
@@ -26,3 +29,9 @@ class TestMetaWeather(TestCase):
         self.assertEqual(results[0]['woeid'], 615702)
         tmp_obj = MetaWeather("san")
         self.assertGreater(len(tmp_obj.search_for_city()), 1)
+
+    def test_get_city_weather_by_date(self):
+        results = self.meta_weather_paris.get_city_weather_by_date(615702, date.today().strftime("%Y/%m/%d"))
+        self.assertGreater(len(results), 0)
+        with self.assertRaises(CityIdNotFound):
+            self.meta_weather_paris.get_city_weather_by_date(0, date.today().strftime("%Y/%m/%d"))
