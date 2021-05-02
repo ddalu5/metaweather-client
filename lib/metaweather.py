@@ -1,13 +1,14 @@
+import datetime
 import requests
+
+from .settings import API_URL
+from .settings import GET_WEATHER_STR
+from .settings import SEARCH_CITY_STR
 
 from .exceptions import CityNameError
 from .exceptions import CityIdNotFound
 from .exceptions import UnknownCityNameError
 from .exceptions import MetaWeatherUnreachableError
-
-from .settings import API_URL
-from .settings import GET_WEATHER_STR
-from .settings import SEARCH_CITY_STR
 
 
 class MetaWeather:
@@ -57,7 +58,7 @@ class MetaWeather:
 
     def get_city_weather_by_date(self, city_id: int, selected_date: str):
         """
-        get the weather for a selected date formed(yyy/mm/dd) for a city (city id from the API)
+        get the weather data for a selected date formed(yyy/mm/dd) for a city (city id from the API)
 
         :param city_id:
         :param selected_date:
@@ -72,3 +73,14 @@ class MetaWeather:
                 raise CityIdNotFound(city_id)
             else:
                 raise MetaWeatherUnreachableError()
+
+    def get_city_weather_for_tomorrow(self, city_id: int):
+        """
+        A wrapper for get_city_weather_by_date that return the next day data
+
+        :param city_id:
+        :return:
+        """
+        today = datetime.date.today()
+        tomorrow = today + datetime.timedelta(days=1)
+        return self.get_city_weather_by_date(city_id, tomorrow.strftime("%Y/%m/%d"))
